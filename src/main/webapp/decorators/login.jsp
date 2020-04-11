@@ -25,5 +25,6 @@
 	<script src="<c:url value='/template/admin/vendor/jquery-easing/jquery.easing.min.js' />"></script>
 	<!-- Custom scripts for all pages-->
 	<script src="<c:url value='/template/admin/js/sb-admin-2.min.js' />"></script>
+	<script type="text/javascript" src="<c:url value='/template/login/js/custom.js' />"></script>
 </body>
 </html>

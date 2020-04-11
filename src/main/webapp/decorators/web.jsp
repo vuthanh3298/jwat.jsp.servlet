@@ -25,6 +25,7 @@
 	
 	<script type="text/javascript" src="<c:url value='/template/web/jquery/jquery.min.js' />"></script>
     <script type="text/javascript" src="<c:url value='/template/web/bootstrap/js/bootstrap.bundle.min.js' />"></script>
+
 	
 </body>
 </html>

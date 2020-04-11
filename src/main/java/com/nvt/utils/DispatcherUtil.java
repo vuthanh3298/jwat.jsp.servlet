@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.nvt.constant.SystemConstant;
+import com.nvt.model.UserModel;
 
 public class DispatcherUtil {
 	public static ResourceBundle resourceBundle = ResourceBundle.getBundle("page_name");
@@ -26,5 +27,13 @@ public class DispatcherUtil {
 	
 	public static void redirect(HttpServletRequest req, HttpServletResponse res, String url) throws ServletException, IOException {
 		res.sendRedirect(req.getContextPath() + url);
+	}
+	
+	public static void redirectByUserRole(HttpServletRequest req, HttpServletResponse res, UserModel userModel) throws ServletException, IOException {
+		if (userModel.getRole().getCode().equals(SystemConstant.USER_ROLE)) {
+			res.sendRedirect(req.getContextPath() + "/trang-chu");
+		} else if (userModel.getRole().getCode().equals(SystemConstant.ADMIN_ROLE)) {
+			res.sendRedirect(req.getContextPath() + "/admin/trang-chu");
+		}
 	}
 }

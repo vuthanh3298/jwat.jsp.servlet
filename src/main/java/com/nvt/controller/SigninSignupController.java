@@ -16,7 +16,8 @@ import com.nvt.constant.SystemConstant;
 import com.nvt.constant.UrlConstant;
 import com.nvt.form.UserForm;
 import com.nvt.model.UserModel;
-import com.nvt.service.impl.UserService;
+import com.nvt.service.IUserService;
+import com.nvt.utils.DispatcherUtil;
 import com.nvt.utils.FormUtil;
 import com.nvt.utils.SessionUtil;
 
@@ -25,7 +26,7 @@ public class SigninSignupController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@Inject
-	UserService userService;
+	IUserService userService;
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
@@ -47,8 +48,6 @@ public class SigninSignupController extends HttpServlet {
 		}
 	}
 
-	
-
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		String action = req.getParameter("action");
@@ -56,15 +55,16 @@ public class SigninSignupController extends HttpServlet {
 			if (action.equals(ActionConstant.LOGIN)) {
 				postLogin(req, res);
 				return;
-			} 
+			} else if(action.equals(ActionConstant.REGISTER)) {
+				postRegister(req, res);
+				return;
+			}
 		}
 	}
 	
-	
-
 	ResourceBundle resourceBundle = ResourceBundle.getBundle("message");
 	
-	private void setMessageLogin(HttpServletRequest req) {
+	private void setMessage(HttpServletRequest req) {
 		String message = req.getParameter("message");
 		if (message != null) {
 			String alert = req.getParameter("alert");
@@ -74,29 +74,26 @@ public class SigninSignupController extends HttpServlet {
 	}
 	
 	private void getLogin(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		setMessageLogin(req);
+		setMessage(req);
 		RequestDispatcher rd = req.getRequestDispatcher("/views/login.jsp");
 		rd.forward(req, res);
 	}
 	
 	private void getRegister(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		setMessage(req);
 		RequestDispatcher rd = req.getRequestDispatcher("/views/register.jsp");
 		rd.forward(req, res);
 	}
 	
 	private void getLogout(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		SessionUtil.getInstance().removeValue(req, "USERMODEL");
-		res.sendRedirect(req.getContextPath() + UrlConstant.LOGIN);
+		DispatcherUtil.redirect(req, res, UrlConstant.LOGIN);
 	}
 	
 	private void getCheckSession(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		UserModel userModel = (UserModel) SessionUtil.getInstance().getValue(req, SessionUtil.USERMODEL);
 		if (userModel != null) {
-			if (userModel.getRole().getCode().equals(SystemConstant.USER_ROLE)) {
-				res.sendRedirect(req.getContextPath() + "/trang-chu");
-			} else if (userModel.getRole().getCode().equals(SystemConstant.ADMIN_ROLE)) {
-				res.sendRedirect(req.getContextPath() + "/admin/trang-chu");
-			}
+			DispatcherUtil.redirectByUserRole(req, res, userModel);
 		} else {
 			res.sendRedirect(req.getContextPath() + "/login?action=login");
 		}
@@ -106,16 +103,35 @@ public class SigninSignupController extends HttpServlet {
 	
 	private void postLogin(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		UserForm userForm = FormUtil.toModel(UserForm.class, req);
-		UserModel userModel = userService.findByEmailAndPasswordAndStatus(userForm.getEmail(), userForm.getPassword(), 1);
-		if (userModel != null) {
+		UserModel userModel = userService.findByEmailAndPassword(userForm.getEmail(), userForm.getPassword());
+		if (userModel == null) {
+			DispatcherUtil.redirect(req, res, "/login?action=login&message=username_password_invalid&alert=danger");
+			return;
+		}
+		if(userModel.getStatus() == SystemConstant.STATUS_ACTIVED) {
 			SessionUtil.getInstance().putValue(req, "USERMODEL", userModel);
-			if (userModel.getRole().getCode().equals(SystemConstant.USER_ROLE)) {
-				res.sendRedirect(req.getContextPath() + "/trang-chu");
-			} else if (userModel.getRole().getCode().equals(SystemConstant.ADMIN_ROLE)) {
-				res.sendRedirect(req.getContextPath() + "/admin/trang-chu");
-			}
+			DispatcherUtil.redirectByUserRole(req, res, userModel);
+			return;
+		} else if(userModel.getStatus() == SystemConstant.STATUS_APPROVED) {
+			DispatcherUtil.redirect(req, res, "/login?action=login&message=tai_khoan_cho_duyet&alert=warning");
+			return;
+		} else if(userModel.getStatus()== SystemConstant.STATUS_DELETE) {
+			DispatcherUtil.redirect(req, res, "/login?action=login&message=tai_khoan_da_bi_xoa&alert=danger");
+			return;
+		}
+	}
+	
+	private void postRegister(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		//		req.setCharacterEncoding("UTF-8");
+		UserModel userModel = FormUtil.toModel(UserModel.class, req);
+		if(userService.isEmailExist(userModel.getEmail())) {
+			DispatcherUtil.redirect(req, res, "/register?action=register&message=email_ton_tai&alert=danger");
+			return;
+		}
+		if(userService.register(userModel) != null) {
+			DispatcherUtil.redirect(req, res, "/login?action=login&message=tai_khoan_cho_duyet&alert=success");
 		} else {
-			res.sendRedirect(req.getContextPath() + "/login?action=login&message=username_password_invalid&alert=danger");
+			DispatcherUtil.redirect(req, res, "/register?action=register");
 		}
 	}
 }

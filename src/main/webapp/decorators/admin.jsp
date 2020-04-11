@@ -64,5 +64,6 @@
   <!-- Page level custom scripts -->
   <script src="<c:url value='/template/admin/js/demo/chart-area-demo.js' />"></script>
   <script src="<c:url value='/template/admin/js/demo/chart-pie-demo.js' />"></script>
+  <script src="<c:url value='/template/admin/js/custom.js' />"></script>
 </body>
 </html>

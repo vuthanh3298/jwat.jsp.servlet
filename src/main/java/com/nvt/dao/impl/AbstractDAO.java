@@ -98,8 +98,9 @@ public class AbstractDAO<T> implements GenericDAO<T> {
 			}
 		}
 	}
+	
 
-	private void setParameter(PreparedStatement statement, Object... parameters) {
+	protected void setParameter(PreparedStatement statement, Object... parameters) {
 		try {
 			for (int i = 0; i < parameters.length; i++) {
 				Object parameter = parameters[i];
@@ -153,12 +154,12 @@ public class AbstractDAO<T> implements GenericDAO<T> {
 	}
 
 	@Override
-	public Long insert(String sql, Object... parameters) {
+	public Integer insert(String sql, Object... parameters) {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		try {
-			Long id = null;
+			Integer id = null;
 			connection = getConnection();
 			connection.setAutoCommit(false);
 			statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -166,7 +167,7 @@ public class AbstractDAO<T> implements GenericDAO<T> {
 			statement.executeUpdate();
 			resultSet = statement.getGeneratedKeys();
 			if (resultSet.next()) {
-				id = resultSet.getLong(1);
+				id = resultSet.getInt(1);
 			}
 			connection.commit();
 			return id;

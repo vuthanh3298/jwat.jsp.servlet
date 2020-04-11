@@ -3,5 +3,9 @@ package com.nvt.service;
 import com.nvt.model.UserModel;
 
 public interface IUserService {
-	UserModel findByEmailAndPasswordAndStatus(String userName, String password, Integer status);
+	UserModel findOne(Integer id);
+	UserModel findByEmailAndPassword(String userName, String password);
+	Integer register(UserModel userModel);
+	Boolean isEmailExist(String email);
+	boolean update(UserModel userModel);
 }

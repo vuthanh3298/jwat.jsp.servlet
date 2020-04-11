@@ -64,12 +64,12 @@
   <!-- Nav Item - User Information -->
   <li class="nav-item dropdown no-arrow">
     <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      <span class="mr-2 d-none d-lg-inline text-gray-600">${USERMODEL.getUsername()}</span>
+      <span class="mr-2 d-none d-lg-inline text-gray-600">${USERMODEL.username}</span>
       <img class="img-profile rounded-circle" src="https://scontent-xsp1-2.xx.fbcdn.net/v/t1.0-9/p720x720/49389787_1147601402083826_3155358583692984320_o.jpg?_nc_cat=107&_nc_sid=85a577&_nc_ohc=011gqJLVIAkAX_aIWMf&_nc_ht=scontent-xsp1-2.xx&_nc_tp=6&oh=bd67495ce766114b848531931cfe2735&oe=5EAC53EC">
     </a>
     <!-- Dropdown - User Information -->
       <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-        <a class="dropdown-item" href="#">
+        <a class="dropdown-item" href="<c:url value="/admin/thong-tin-tai-khoan" />">
           <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
           Profile
         </a>

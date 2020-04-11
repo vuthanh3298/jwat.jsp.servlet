@@ -5,8 +5,7 @@
 
 	<div class="input-group md-form form-sm form-2 pl-0 ">
 		<button type="button" class="btn btn-outline-danger"
-			data-toggle="modal" data-target="#AddUserModalCenter">Thêm
-			tài khoản</button>
+			data-toggle="modal" data-target="#AddUserModalCenter">Thêm</button>
 		<!-- start search -->
 		<input class="form-control my-0 py-1 red-border" style="width: 70px;"
 			type="text" placeholder="Tìm kiếm ..." aria-label="Search" />

@@ -10,16 +10,19 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.nvt.utils.DispatcherUtil;
 
-@WebServlet(urlPatterns = {"/admin/users"})
-public class TaiKhoanController extends HttpServlet {
+@WebServlet(urlPatterns = { "/admin/thong-bao-deadline"})
+public class ThongBaoVaDeadlineController extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		DispatcherUtil.returnViewNameAdminAndSetPageName(req, res, "users");
+		DispatcherUtil.returnViewNameAdminAndSetPageName(req, res, "ThongBaoVaDeadline");
 	}
+
 	
+
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		super.doPost(req, res);
 	}
+
 }
